@@ -1,4 +1,4 @@
-import { Match } from '../matches/match.model';
+import { Match } from '../models/match.model';
 
 export const transformApiDataToMatch = ({ AwayTeam, HomeTeam, Date, FTHG, FTAG }) : Match => ({
     ownTeam: HomeTeam,

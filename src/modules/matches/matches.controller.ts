@@ -5,8 +5,8 @@ import {
   MATCH_ADDED_SUCCESS,
   MATCH_DELETED_SUCCESS,
   MATCH_UPDATED_SUCCESS,
-} from '../helpers/messages';
-import { AddMatchDto, DeleteMatchDto, GetMatchesDto, UpdateMatchDto } from '../teams/teams.dto';
+} from '../../helpers/messages';
+import { AddMatchDto, DeleteMatchDto, GetMatchesDto, UpdateMatchDto } from '../../dto/matches.dto';
 
 @Controller('matches')
 export class MatchesController {

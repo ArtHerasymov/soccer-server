@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TeamsModule } from './teams/teams.module';
-import { MatchesModule } from './matches/matches.module';
+import { TeamsModule } from './modules/teams/teams.module';
+import { MatchesModule } from './modules/matches/matches.module';
 
 @Module({
-  imports: [TeamsModule, MongooseModule.forRoot('mongodb+srv://backender:Up35ATzGTR387I2t@cluster0.fscez.mongodb.net/soccer?retryWrites=true&w=majority'), MatchesModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [TeamsModule, MongooseModule.forRoot(process.env.MONGO_CONNECTION_URL), MatchesModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Team } from './teams.model';
-import { Match } from '../matches/match.model';
+import { Team } from '../../models/teams.model';
+import { Match } from '../../models/match.model';
 
 @Injectable()
 export class TeamsService {

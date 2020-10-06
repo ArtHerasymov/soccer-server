@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Match } from './match.model';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { transformApiDataToMatch } from '../helpers/utils';
 import fetch from 'node-fetch';
 import { TeamsService } from '../teams/teams.service';
+import { transformApiDataToMatch } from '../../helpers/utils';
+import { Match } from '../../models/match.model';
 
 @Injectable()
 export class MatchesService {

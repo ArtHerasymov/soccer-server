@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { Match } from '../matches/match.model';
+import { Match } from './match.model';
 
 export const TeamSchema = new Schema({
   title: String,

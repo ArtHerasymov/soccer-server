@@ -7,8 +7,8 @@ import {
   GetRatioDto,
   GetResultsDto,
   GetTeamsDto,
-} from './teams.dto';
-import { TEAM_ADDED_SUCCESS, TEAM_DELETE_SUCCESS, TEAM_UPDATED_SUCCESS } from '../helpers/messages';
+} from '../../dto/teams.dto';
+import { TEAM_ADDED_SUCCESS, TEAM_DELETE_SUCCESS, TEAM_UPDATED_SUCCESS } from '../../helpers/messages';
 
 @Controller('teams')
 export class TeamsController {
