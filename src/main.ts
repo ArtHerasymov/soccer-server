@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { SplitPipe } from './pipes/split.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT || 3000;
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new SplitPipe(), new ValidationPipe());
   await app.listen(port);
   console.log('App listening on port ' + port);
 }

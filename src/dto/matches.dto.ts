@@ -39,7 +39,7 @@ export class DeleteMatchDto {
 
 export class GetMatchesDto {
   @IsNotEmpty()
-  teams: string;
+  teams: string[];
 
   dateFrom: string;
 

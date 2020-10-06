@@ -16,7 +16,7 @@ export class TeamsService {
     if (!titles) {
       return this.teamModel.find().populate('matches');
     }
-    return this.teamModel.find({ title: { $in: titles.split(',') } }).populate('matches');
+    return this.teamModel.find({ title: { $in: titles } }).populate('matches');
   }
 
   async getResults(title: string) {

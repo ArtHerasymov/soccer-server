@@ -23,7 +23,7 @@ export class MatchesController {
 
   @Get('')
   async getMatches(@Query() query: GetMatchesDto) {
-    return this.matchesService.getMatches(query.teams.split(','), query.dateFrom, query.dateTo);
+    return this.matchesService.getMatches(query.teams, query.dateFrom, query.dateTo);
   }
 
   @Post('')
