@@ -15,7 +15,7 @@ export class MatchesService {
   ) {}
 
   async refreshMatchesData() {
-    const response = await fetch('https://api.jsonbin.io/b/5ebb0cf58284f36af7ba1779/1');
+    const response = await fetch(process.env.MATCHES_API_URL);
     const data = await response.json();
 
     data.forEach(data => {
