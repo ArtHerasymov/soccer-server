@@ -4,13 +4,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import fetch from 'node-fetch';
 import { TeamsService } from '../teams/teams.service';
 import { transformApiDataToMatch } from '../../helpers/utils';
-import { Match } from '../../models/match.model';
+import { Match, MATCH_SCHEMA_TYPE } from '../../models/match.model';
 
 @Injectable()
 export class MatchesService {
 
   constructor(
-    @InjectModel('Match') private readonly matchModel: Model<Match>,
+    @InjectModel(MATCH_SCHEMA_TYPE) private readonly matchModel: Model<Match>,
     private readonly teamsService: TeamsService,
   ) {}
 

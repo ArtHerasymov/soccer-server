@@ -1,6 +1,8 @@
 import { Schema } from 'mongoose';
 import { Match } from './match.model';
 
+export const TEAM_SCHEMA_TYPE = 'Team';
+
 export const TeamSchema = new Schema({
   title: String,
   matches: [{ type: Schema.Types.ObjectId, ref: 'Match' }]

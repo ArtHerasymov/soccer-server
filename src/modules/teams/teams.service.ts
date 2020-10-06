@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Team } from '../../models/teams.model';
-import { Match } from '../../models/match.model';
+import { Team, TEAM_SCHEMA_TYPE } from '../../models/teams.model';
+import { Match, MATCH_SCHEMA_TYPE } from '../../models/match.model';
 
 @Injectable()
 export class TeamsService {
 
   constructor(
-    @InjectModel('Team') private readonly teamModel: Model<Team>,
-    @InjectModel('Match') private readonly matchModel: Model<Match>,
+    @InjectModel(TEAM_SCHEMA_TYPE) private readonly teamModel: Model<Team>,
+    @InjectModel(MATCH_SCHEMA_TYPE) private readonly matchModel: Model<Match>,
   ) {}
 
   async searchTeamsByTitles(titles: string) {

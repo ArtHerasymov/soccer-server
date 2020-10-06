@@ -1,5 +1,7 @@
 import { Schema } from 'mongoose';
 
+export const MATCH_SCHEMA_TYPE = 'Match';
+
 export const MatchSchema = new Schema({
   date: Date,
   ownTeam: String,
