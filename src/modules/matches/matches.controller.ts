@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
 import { MatchesService } from './matches.service';
 import {
   DATA_UPDATED_SUCCESS,
   MATCH_ADDED_SUCCESS,
   MATCH_DELETED_SUCCESS,
-  MATCH_UPDATED_SUCCESS,
+  MATCH_UPDATED_SUCCESS, TEAM_NOT_FOUND,
 } from '../../helpers/messages';
 import { AddMatchDto, DeleteMatchDto, GetMatchesDto, UpdateMatchDto } from '../../dto/matches.dto';
 
@@ -23,7 +23,11 @@ export class MatchesController {
 
   @Get('')
   async getMatches(@Query() query: GetMatchesDto) {
-    return this.matchesService.getMatches(query.teams, query.dateFrom, query.dateTo);
+    const results = await this.matchesService.getMatches(query.teams, query.dateFrom, query.dateTo);
+    if (!results.length) {
+      throw new BadRequestException(TEAM_NOT_FOUND.en);
+    }
+    return results;
   }
 
   @Post('')

@@ -11,7 +11,6 @@ export class SplitPipe implements  PipeTransform {
       }
       keys.forEach(key => data[key] = data[key].indexOf(',') === -1 ? data[key] : data[key].split(','));
     }
-    console.log(data);
     return data;
   }
 }

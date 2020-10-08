@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import {
   AddTeamDto,
@@ -8,7 +8,7 @@ import {
   GetResultsDto,
   GetTeamsDto,
 } from '../../dto/teams.dto';
-import { TEAM_ADDED_SUCCESS, TEAM_DELETE_SUCCESS, TEAM_UPDATED_SUCCESS } from '../../helpers/messages';
+import { TEAM_ADDED_SUCCESS, TEAM_DELETE_SUCCESS, TEAM_NOT_FOUND, TEAM_UPDATED_SUCCESS } from '../../helpers/messages';
 
 @Controller('teams')
 export class TeamsController {
@@ -22,12 +22,20 @@ export class TeamsController {
 
   @Get('results')
   async getSeasonResults(@Query() query: GetResultsDto) {
-    return this.teamsService.getResults(query.team);
+    const results = await this.teamsService.getResults(query.team);
+    if (!results.length) {
+      throw new BadRequestException(TEAM_NOT_FOUND.en);
+    }
+    return results;
   }
 
   @Get('ratio')
   async getRation(@Query() query: GetRatioDto) {
-    return this.teamsService.getRatio(query.team);
+    const results = await this.teamsService.getRatio(query.team)
+    if (!results.length) {
+      throw new BadRequestException(TEAM_NOT_FOUND.en);
+    }
+    return results;
   }
 
   @Get('ranks')

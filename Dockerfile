@@ -10,7 +10,7 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV} \
     MONGO_CONNECTION_URL='mongodb+srv://backender:Up35ATzGTR387I2t@cluster0.fscez.mongodb.net/soccer?retryWrites=true&w=majority' \
     PORT=3000 \
-    MATCHES_API_URL=https://.jsonbin.io/b/5ebb0cf58284f36af7ba1779/1
+    MATCHES_API_URL=https://api.jsonbin.io/b/5ebb0cf58284f36af7ba1779/1
 
 WORKDIR /usr/src/app
 COPY package*.json ./
