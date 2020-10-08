@@ -1,4 +1,4 @@
-#42 Stairs Back-end final task
+# 42 Stairs Back-end final task
 
-##Run
+## Run
 npm run start 
