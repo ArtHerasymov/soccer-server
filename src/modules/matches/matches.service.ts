@@ -1,55 +1,57 @@
-import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import fetch from 'node-fetch';
-import { TeamsService } from '../teams/teams.service';
+import { HttpException, HttpService, Injectable } from '@nestjs/common';
 import { transformApiDataToMatch } from '../../helpers/utils';
-import { Match, MATCH_SCHEMA_TYPE } from '../../models/match.model';
+import { IMatchRepository, MatchRepository } from '../../repositories/match.repository';
+import { ITeamRepository, TeamRepository } from '../../repositories/team.repository';
+import { Match } from '../../models/match.model';
+import { isArray } from 'class-validator';
+
+export interface IResourceResponse {
+  AwayTeam: string;
+  HomeTeam: string;
+  Date: string;
+  FTHG: string;
+  FTAG: string;
+}
 
 @Injectable()
 export class MatchesService {
 
   constructor(
-    @InjectModel(MATCH_SCHEMA_TYPE) private readonly matchModel: Model<Match>,
-    private readonly teamsService: TeamsService,
+    private readonly matchRepository: MatchRepository,
+    private readonly teamRepository: TeamRepository,
+    private readonly httpService: HttpService,
   ) {}
 
   async refreshMatchesData() {
-    const response = await fetch(process.env.MATCHES_API_URL);
-    const data = await response.json();
-
-    data.forEach(data => {
-      this.updateMatchesDataSet(transformApiDataToMatch(data)).catch();
-    });
-  }
-
-  async getMatches(teams: string[], dateFrom?: string, dateTo?: string) {
-    const query: any = { ownTeam: { $in: teams } };
-    if (dateFrom && dateTo) {
-      query.date = { $gt: new Date(dateFrom), $lt: new Date(dateTo) };
+    const response = await this.httpService.get<IResourceResponse>(process.env.MATCHES_API_URL);
+    const data: any = (await response.toPromise()).data;
+    if (!isArray(data)) {
+      throw new Error();
     }
-    return this.matchModel.find(query);
+    return Promise.all(data.map(item => this.updateMatchesDataSet(transformApiDataToMatch(item))));
   }
 
-  async addMatch(match: Match) {
-    const newMatch = new this.matchModel(match);
-    return newMatch.save();
+  getMatches(teams: string[], dateFrom?: string, dateTo?: string): Promise<Match[]> {
+    return this.matchRepository.getMatchesByParams(teams, dateFrom, dateTo);
   }
 
-  async updateMatch(data: Match) {
-    return this.matchModel.findOneAndUpdate({ _id: data.id }, data, { new: true, });
+  addMatch(match: Match) {
+    return this.matchRepository.addMatch(match);
   }
 
-  async deleteMatchById(id: string) {
-    return this.matchModel.deleteOne({ _id: id });
+  updateMatch(match: Match) {
+    return this.matchRepository.updateMatch(match);
+  }
+
+  deleteMatchById(id: string) {
+    return this.matchRepository.deleteById(id);
   }
 
 
   private async updateMatchesDataSet(data: Match) {
-    const newMatch = new this.matchModel(data);
-    newMatch.save();
-    this.teamsService.updateMatchForTeam(data.guest, newMatch._id);
-    this.teamsService.updateMatchForTeam(data.ownTeam, newMatch._id);
+    const match = await this.matchRepository.addMatch(data);
+    await this.teamRepository.addMatchForTeam(data.guest, match._id)
+    await this.teamRepository.addMatchForTeam(data.ownTeam, match._id)
   }
 
 }

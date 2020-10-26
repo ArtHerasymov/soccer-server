@@ -5,5 +5,6 @@ export const MATCH_DELETED_SUCCESS = { en: 'Match has been successfully deleted.
 export const TEAM_ADDED_SUCCESS = { en: 'Team has been successfully deleted.' };
 export const TEAM_UPDATED_SUCCESS = { en: 'Team has been successfully updated.' };
 export const TEAM_DELETE_SUCCESS = { en: 'Team has been successfully deleted.' };
+export const SERVER_ERROR = { en: 'Server error' };
 
 export const TEAM_NOT_FOUND = { en: 'Team was not found.' }

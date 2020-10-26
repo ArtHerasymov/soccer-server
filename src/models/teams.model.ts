@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { Match } from './match.model';
+import { Match } from '../repositories/match.repository';
 
 export const TEAM_SCHEMA_TYPE = 'Team';
 

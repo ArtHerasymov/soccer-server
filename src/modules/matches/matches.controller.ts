@@ -1,10 +1,21 @@
-import { BadRequestException, Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { MatchesService } from './matches.service';
 import {
   DATA_UPDATED_SUCCESS,
   MATCH_ADDED_SUCCESS,
   MATCH_DELETED_SUCCESS,
-  MATCH_UPDATED_SUCCESS, TEAM_NOT_FOUND,
+  MATCH_UPDATED_SUCCESS, SERVER_ERROR, TEAM_NOT_FOUND,
 } from '../../helpers/messages';
 import { AddMatchDto, DeleteMatchDto, GetMatchesDto, UpdateMatchDto } from '../../dto/matches.dto';
 
@@ -15,9 +26,13 @@ export class MatchesController {
 
   @Get('refresh')
   async refreshMatchData() {
-    await this.matchesService.refreshMatchesData();
-    return {
-      message: DATA_UPDATED_SUCCESS.en,
+    try {
+      await this.matchesService.refreshMatchesData();
+      return {
+        message: DATA_UPDATED_SUCCESS.en,
+      }
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -32,9 +47,13 @@ export class MatchesController {
 
   @Post('')
   async addMatch(@Body() body: AddMatchDto) {
-    await this.matchesService.addMatch(body);
-    return {
-      message: MATCH_ADDED_SUCCESS.en,
+    try {
+      await this.matchesService.addMatch(body);
+      return {
+        message: MATCH_ADDED_SUCCESS.en,
+      }
+    } catch(e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -49,9 +68,13 @@ export class MatchesController {
 
   @Delete('')
   async deleteMatch(@Query() query: DeleteMatchDto) {
-    await this.matchesService.deleteMatchById(query.id);
-    return {
-      message: MATCH_DELETED_SUCCESS.en,
+    try {
+      await this.matchesService.deleteMatchById(query.id);
+      return {
+        message: MATCH_DELETED_SUCCESS.en,
+      }
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

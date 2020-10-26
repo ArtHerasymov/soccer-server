@@ -1,5 +1,4 @@
 import { IsNotEmpty } from 'class-validator';
-import { Match } from '../models/match.model';
 
 export class AddTeamDto {
   @IsNotEmpty()
@@ -14,7 +13,7 @@ export class EditTeamDto {
 
   title: string;
 
-  matches: Array<Match>;
+  matches: string[];
 }
 
 export class GetTeamsDto {

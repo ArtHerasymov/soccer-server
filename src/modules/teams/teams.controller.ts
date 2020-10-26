@@ -1,4 +1,15 @@
-import { BadRequestException, Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import {
   AddTeamDto,
@@ -8,7 +19,13 @@ import {
   GetResultsDto,
   GetTeamsDto,
 } from '../../dto/teams.dto';
-import { TEAM_ADDED_SUCCESS, TEAM_DELETE_SUCCESS, TEAM_NOT_FOUND, TEAM_UPDATED_SUCCESS } from '../../helpers/messages';
+import {
+  SERVER_ERROR,
+  TEAM_ADDED_SUCCESS,
+  TEAM_DELETE_SUCCESS,
+  TEAM_NOT_FOUND,
+  TEAM_UPDATED_SUCCESS,
+} from '../../helpers/messages';
 
 @Controller('teams')
 export class TeamsController {
@@ -16,54 +33,86 @@ export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
   @Get('')
-  getTeamsByTitle(@Query() query: GetTeamsDto) {
-    return this.teamsService.searchTeamsByTitles(query.titles);
+  async getTeamsByTitle(@Query() query: GetTeamsDto) {
+    try {
+      const teams = await this.teamsService.searchTeamsByTitles(query.titles);
+      return teams;
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get('results')
   async getSeasonResults(@Query() query: GetResultsDto) {
-    const results = await this.teamsService.getResults(query.team);
-    if (!results.length) {
-      throw new BadRequestException(TEAM_NOT_FOUND.en);
+    try {
+      const results = await this.teamsService.getResults(query.team);
+      if (!results) {
+        throw new BadRequestException(TEAM_NOT_FOUND.en);
+      }
+      return results;
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return results;
   }
 
   @Get('ratio')
-  async getRation(@Query() query: GetRatioDto) {
-    const results = await this.teamsService.getRatio(query.team)
-    if (!results.length) {
-      throw new BadRequestException(TEAM_NOT_FOUND.en);
+  async getRatio(@Query() query: GetRatioDto) {
+    try {
+      const results = await this.teamsService.getRatio(query.team)
+      if (!results) {
+        throw new BadRequestException(TEAM_NOT_FOUND.en);
+      }
+      return results;
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return results;
+
   }
 
   @Get('ranks')
   async getRanks() {
-    return this.teamsService.getRanks();
+    try {
+      const ranks = await this.teamsService.getRanks();
+      return ranks;
+    }
+     catch (e) {
+       throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Post('')
   async addTeam(@Body() team: AddTeamDto) {
-    await this.teamsService.addTeam(team);
-    return {
-      message: TEAM_ADDED_SUCCESS.en,
+    try {
+      await this.teamsService.addTeam(team);
+      return {
+        message: TEAM_ADDED_SUCCESS.en,
+      }
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @Put('')
   async editTeam(@Body() team: EditTeamDto) {
-    await this.teamsService.editTeam(team);
-    return {
-      message: TEAM_UPDATED_SUCCESS.en,
+    try {
+      await this.teamsService.editTeam(team);
+      return {
+        message: TEAM_UPDATED_SUCCESS.en,
+      }
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @Delete('')
   async deleteTeam(@Query() query: DeleteTeamDto) {
-    await this.teamsService.deleteTeam(query.id);
-    return {
-      message: TEAM_DELETE_SUCCESS.en,
+    try {
+      await this.teamsService.deleteTeam(query.id);
+      return {
+        message: TEAM_DELETE_SUCCESS.en,
+      }
+    } catch (e) {
+      throw new HttpException(SERVER_ERROR.en, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

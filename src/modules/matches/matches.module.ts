@@ -1,12 +1,10 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { MatchesController } from './matches.controller';
 import { MatchesService } from './matches.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { TeamsModule } from '../teams/teams.module';
-import { MatchSchema } from '../../models/match.model';
+import { RepositoryModule } from '../../repositories/repository.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Match', schema: MatchSchema }]), TeamsModule],
+  imports: [RepositoryModule, HttpModule],
   controllers: [MatchesController],
   providers: [MatchesService],
 })
