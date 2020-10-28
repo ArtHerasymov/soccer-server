@@ -12,7 +12,7 @@ export const MatchSchema = new Schema({
 
 export interface Match {
   id?: string;
-  date: Date,
+  date: Date | string,
   guest: string,
   guestGoals: number,
   ownTeam?: string;

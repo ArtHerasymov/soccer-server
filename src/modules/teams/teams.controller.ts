@@ -20,6 +20,7 @@ import {
   GetTeamsDto,
 } from '../../dto/teams.dto';
 import {
+  MATCHES_NOT_EXIST,
   SERVER_ERROR,
   TEAM_ADDED_SUCCESS,
   TEAM_DELETE_SUCCESS,
@@ -83,6 +84,9 @@ export class TeamsController {
   @Post('')
   async addTeam(@Body() team: AddTeamDto) {
     try {
+      if(!(await this.teamsService.checkMatchesExist(team.matches))) {
+        throw new HttpException(MATCHES_NOT_EXIST.en, HttpStatus.BAD_REQUEST);
+      }
       await this.teamsService.addTeam(team);
       return {
         message: TEAM_ADDED_SUCCESS.en,
@@ -95,6 +99,9 @@ export class TeamsController {
   @Put('')
   async editTeam(@Body() team: EditTeamDto) {
     try {
+      if(!(await this.teamsService.checkMatchesExist(team.matches))) {
+        throw new HttpException(MATCHES_NOT_EXIST.en, HttpStatus.BAD_REQUEST);
+      }
       await this.teamsService.editTeam(team);
       return {
         message: TEAM_UPDATED_SUCCESS.en,

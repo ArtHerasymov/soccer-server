@@ -1,4 +1,3 @@
-import { Schema } from 'mongoose';
 import { Match } from './match.repository';
 import { Injectable } from '@nestjs/common';
 import { INewTeam } from '../modules/teams/teams.service';
@@ -36,8 +35,8 @@ export interface IMatchesQuery {
 export interface ITeamRepository {
   add(team: INewTeam): Promise<Team>;
   update(team: INewTeam): Promise<Team>;
-  getTeamsByTitles(titles: string): Promise<Match[]>;
-  getAllTeams(): Promise<Match[]>;
+  getTeamsByTitles(titles: string): Promise<Team[]>;
+  getAllTeams(): Promise<Team[]>;
   getTeamResultsByTitle(title: string): Promise<ITeamResults>;
   getTeamRatio(title: string): Promise<ITeamRatio>;
   getTeamsRanks(): Promise<IRanks>;
@@ -52,15 +51,15 @@ export class TeamRepository implements ITeamRepository {
     @InjectModel(TEAM_SCHEMA_TYPE) private readonly teamModel: Model<Team>,
   ) {}
 
-  getTeamsByTitles(titles: string) {
+  getTeamsByTitles(titles: string): Promise<Team[]> {
     return this.teamModel.find({ title: { $in: titles } }).populate('matches');
   }
 
-  getAllTeams() {
+  getAllTeams(): Promise<Team[]> {
     return this.teamModel.find().populate('matches');
   }
 
-  getTeamResultsByTitle(title: string) {
+  getTeamResultsByTitle(title: string): Promise<ITeamResults> {
     return this.teamModel.aggregate([
       { $match: { title } },
       { $lookup: { from: 'matches', localField: 'matches', foreignField: '_id', as: 'matches' } },
@@ -75,7 +74,7 @@ export class TeamRepository implements ITeamRepository {
     ]);
   }
 
-  getTeamRatio(title: string) {
+  getTeamRatio(title: string): Promise<ITeamRatio> {
     return this.teamModel.aggregate([
       { $match: { title } },
       { $lookup: { from: 'matches', localField: 'matches', foreignField: '_id', as: 'matches' } },
@@ -91,7 +90,7 @@ export class TeamRepository implements ITeamRepository {
     ]);
   }
 
-  getTeamsRanks() {
+  getTeamsRanks(): Promise<IRanks> {
     return this.teamModel.aggregate([
       { $lookup: { from: 'matches', localField: 'matches', foreignField: '_id', as: 'matches' } },
       {
@@ -112,15 +111,15 @@ export class TeamRepository implements ITeamRepository {
     ])
   }
 
-  add(team: INewTeam) {
+  add(team: INewTeam): Promise<Team> {
     return this.teamModel.create(team);
   }
 
-  deleteById(id: string) {
+  deleteById(id: string): Promise<Team> {
     return this.teamModel.deleteOne({ _id: id });
   }
 
-  update(team: INewTeam) {
+  update(team: INewTeam): Promise<Team> {
     const query: IMatchesQuery  = {};
     const { matches } = team;
     if (matches.length) {
@@ -129,7 +128,7 @@ export class TeamRepository implements ITeamRepository {
     return this.teamModel.findOneAndUpdate({ _id: team.id }, query, { new: true });
   }
 
-  addMatchForTeam(title: string, matchId: string) {
+  addMatchForTeam(title: string, matchId: string): Promise<Team> {
     return this.teamModel.findOneAndUpdate({ title }, { $push: { matches: matchId } ,title }, { upsert: true, new: true }).exec();
   }
 

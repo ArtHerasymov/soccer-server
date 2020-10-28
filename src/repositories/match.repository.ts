@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 
 export interface Match {
   _id?: string;
-  date: Date,
+  date: Date | string,
   guest: string,
   guestGoals: number,
   ownTeam?: string;
@@ -27,7 +27,7 @@ export class MatchRepository implements IMatchRepository {
 
   constructor(@InjectModel(MATCH_SCHEMA_TYPE) private readonly matchModel: Model<Match>) {}
 
-  getMatchesByParams(teams: string[], dateFrom?: string, dateTo?: string) {
+  getMatchesByParams(teams: string[], dateFrom?: string, dateTo?: string): Promise<Match[]> {
     const query: any = { ownTeam: { $in: teams } };
     if (dateFrom && dateTo) {
       query.date = { $gt: new Date(dateFrom), $lt: new Date(dateTo) };
@@ -35,19 +35,19 @@ export class MatchRepository implements IMatchRepository {
     return this.matchModel.find(query);
   }
 
-  getMatchesByIds(ids: string[]) {
+  getMatchesByIds(ids: string[]): Promise<Match[]> {
     return this.matchModel.find({ _id: { $in: ids } });
   }
 
-  addMatch(match: Match) {
+  addMatch(match: Match): Promise<Match> {
     return this.matchModel.create(match);
   }
 
-  updateMatch(match: Match) {
+  updateMatch(match: Match): Promise<Match> {
     return this.matchModel.findOneAndUpdate({ _id: match._id }, match, { new: true, });
   }
 
-  deleteById(id: string) {
+  deleteById(id: string): Promise<Match> {
     return this.matchModel.deleteOne({ _id: id });
   }
 
