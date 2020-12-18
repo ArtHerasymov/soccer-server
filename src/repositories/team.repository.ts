@@ -112,7 +112,7 @@ export class TeamRepository implements ITeamRepository {
   }
 
   add(team: INewTeam): Promise<Team> {
-    return this.teamModel.create(team);
+    return this.teamModel.findOneAndUpdate(team, { upsert: true });
   }
 
   deleteById(id: string): Promise<Team> {

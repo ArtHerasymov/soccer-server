@@ -1,7 +1,7 @@
-import { HttpException, HttpService, Injectable } from '@nestjs/common';
+import { HttpService, Injectable } from '@nestjs/common';
 import { IResourceResponse, isMatchValid, transformApiDataToMatch } from '../../helpers/utils';
-import { IMatchRepository, MatchRepository } from '../../repositories/match.repository';
-import { ITeamRepository, TeamRepository } from '../../repositories/team.repository';
+import { MatchRepository } from '../../repositories/match.repository';
+import { TeamRepository } from '../../repositories/team.repository';
 import { Match } from '../../models/match.model';
 import { isArray } from 'class-validator';
 

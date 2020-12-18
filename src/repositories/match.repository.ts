@@ -1,4 +1,3 @@
-import { Schema } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { MATCH_SCHEMA_TYPE } from '../models/match.model';
@@ -40,7 +39,7 @@ export class MatchRepository implements IMatchRepository {
   }
 
   addMatch(match: Match): Promise<Match> {
-    return this.matchModel.create(match);
+    return this.matchModel.findOneAndUpdate(match, { upsert: true });
   }
 
   updateMatch(match: Match): Promise<Match> {
